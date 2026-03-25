@@ -28,7 +28,15 @@ export default {
         counts[key] = (counts[key] || 0) + 1;
         total++;
 
-        const newUrl = `https://gen.pollinations.ai${url.pathname}${url.search}`;
+        // Rewrite legacy paths to gen.pollinations.ai/image/...
+        let pathname = url.pathname;
+        if (pathname.startsWith("/prompt/")) {
+            pathname = "/image/" + pathname.slice("/prompt/".length);
+        } else if (pathname === "/models") {
+            pathname = "/image/models";
+        }
+
+        const newUrl = `https://gen.pollinations.ai${pathname}${url.search}`;
         return new Response(
             JSON.stringify({
                 message: "This service has moved to gen.pollinations.ai",
