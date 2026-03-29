@@ -135,15 +135,9 @@ const preMiddleware = async (
     }
 
     if (!pathname.startsWith("/prompt")) {
-        res.writeHead(404, { "Content-Type": "application/json" });
-        res.end(
-            JSON.stringify({
-                error: "Not Found",
-                message: "The requested endpoint was not found",
-                path: pathname,
-            }),
-        );
-        return false;
+        // Treat any unmatched path as a prompt (e.g. /a%20cute%20cat → /prompt/a%20cute%20cat)
+        const newUrl = `/prompt${pathname}${req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : ""}`;
+        req.url = newUrl;
     }
 
     return true;
@@ -372,11 +366,14 @@ const checkCacheAndGenerate = async (
     req: IncomingMessage,
     res: ServerResponse,
 ): Promise<void> => {
-    const { pathname, query } = parse(req.url, true);
+    let { pathname, query } = parse(req.url, true);
 
     const needsProcessing = await preMiddleware(pathname, req, res);
 
     if (!needsProcessing) return;
+
+    // Re-parse in case preMiddleware rewrote req.url
+    ({ pathname, query } = parse(req.url, true));
 
     const originalPrompt = urldecode(
         pathname.split("/prompt/")[1] || "random_prompt",
