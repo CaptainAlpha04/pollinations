@@ -21,7 +21,7 @@ for noisy in ["httpx", "httpcore", "urllib3", "diffusers", "transformers", "hugg
 
 MODEL_ID = "stabilityai/sdxl-turbo"
 TAESD_ID = "madebyollin/taesdxl"
-NUM_INFERENCE_STEPS = 2
+NUM_INFERENCE_STEPS = 4
 MAX_DIM = 512
 
 REGISTER_URL = os.environ.get("REGISTER_URL", "")
