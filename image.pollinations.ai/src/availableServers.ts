@@ -38,7 +38,7 @@ const MAIN_SERVER_URL =
     process.env.POLLINATIONS_MASTER_URL ||
     "https://image.pollinations.ai/register";
 
-const concurrency = 3;
+const concurrency = 5;
 const MAX_QUEUE_SIZE = 50;
 
 function decayErrors() {
