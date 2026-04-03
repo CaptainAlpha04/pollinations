@@ -38,7 +38,8 @@ const MAIN_SERVER_URL =
     process.env.POLLINATIONS_MASTER_URL ||
     "https://image.pollinations.ai/register";
 
-const concurrency = 2;
+const concurrency = 3;
+const MAX_QUEUE_SIZE = 50;
 
 function decayErrors() {
     Object.values(SERVERS).forEach((servers) => {
@@ -297,6 +298,13 @@ export const fetchFromLeastBusyServer = async (
 
     if (!server) {
         throw new Error(`Server ${serverUrl} not found for type ${type}`);
+    }
+
+    const queueLoad = server.queue.size + server.queue.pending;
+    if (queueLoad >= MAX_QUEUE_SIZE) {
+        throw new Error(
+            `Queue full (${queueLoad}/${MAX_QUEUE_SIZE}). This legacy endpoint is overloaded. Please use https://enter.pollinations.ai for faster, more reliable image generation.`
+        );
     }
 
     return server.queue.add(
