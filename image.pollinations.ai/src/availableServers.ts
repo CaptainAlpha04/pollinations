@@ -335,7 +335,7 @@ export const fetchFromLeastBusyFluxServer = (options: RequestInit) =>
     fetchFromLeastBusyServer("flux", options);
 
 // Hardcoded Sana server - bypasses registration flow
-const SANA_URL = process.env.SANA_URL || "http://localhost:19876";
+const SANA_URL = process.env.SANA_URL || "http://45.143.122.9:32174";
 registerServer(SANA_URL, "sana");
 setInterval(() => registerServer(SANA_URL, "sana"), 30000);
 
